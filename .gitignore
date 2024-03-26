@@ -1,6 +1,7 @@
 #
 dist
 .vscode
+.idea
 examples
 
 # dependencies

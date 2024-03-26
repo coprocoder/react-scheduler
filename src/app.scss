@@ -1,0 +1,13 @@
+.rs__cell {
+  border-width: 1px 0 0 0 !important;
+
+  &.rs__time {
+    align-items: baseline !important;
+    justify-content: flex-end !important;
+    border-color: transparent !important;
+  }
+
+  &.rs__today_cell:not(.rs__header):nth-child(4n - 6) {
+    border-color: darkgray !important;
+  }
+}

@@ -25,6 +25,7 @@ const defaultDay = {
   startHour: 9,
   endHour: 17,
   step: 60,
+  headerShow: true,
   navigation: true,
 };
 

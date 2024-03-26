@@ -35,6 +35,7 @@ export interface DayProps {
   startHour: DayHours;
   endHour: DayHours;
   step: number;
+  headerShow?: boolean;
   cellRenderer?(props: CellRenderedProps): JSX.Element;
   headRenderer?(day: Date): JSX.Element;
   hourRenderer?(hour: string): JSX.Element;
@@ -62,7 +63,7 @@ const Day = () => {
     agenda,
   } = useStore();
 
-  const { startHour, endHour, step, cellRenderer, headRenderer, hourRenderer } = day!;
+  const { startHour, endHour, step, headerShow, cellRenderer, headRenderer, hourRenderer } = day!;
   const START_TIME = set(selectedDate, { hours: startHour, minutes: 0, seconds: 0 });
   const END_TIME = set(selectedDate, { hours: endHour, minutes: -step, seconds: 0 });
   const hours = eachMinuteOfInterval(
@@ -149,20 +150,22 @@ const Day = () => {
     return (
       <>
         {/* Header */}
-        <TableGrid days={1} sticky="1" stickyNavigation={stickyNavigation}>
-          <span className="rs__cell"></span>
-          <span
-            className={`rs__cell rs__header ${isToday(selectedDate) ? "rs__today_cell" : ""}`}
-            style={{ height: headerHeight }}
-          >
-            {typeof headRenderer === "function" ? (
-              <div>{headRenderer(selectedDate)}</div>
-            ) : (
-              <TodayTypo date={selectedDate} locale={locale} />
-            )}
-            {renderMultiDayEvents(resourcedEvents)}
-          </span>
-        </TableGrid>
+        {headerShow && (
+          <TableGrid days={1} sticky="1" stickyNavigation={stickyNavigation}>
+            <span className="rs__cell"></span>
+            <span
+              className={`rs__cell rs__header ${isToday(selectedDate) ? "rs__today_cell" : ""}`}
+              style={{ height: headerHeight }}
+            >
+              {typeof headRenderer === "function" ? (
+                <div>{headRenderer(selectedDate)}</div>
+              ) : (
+                <TodayTypo date={selectedDate} locale={locale} />
+              )}
+              {renderMultiDayEvents(resourcedEvents)}
+            </span>
+          </TableGrid>
+        )}
         <TableGrid days={1}>
           {/* Body */}
           {hours.map((h, i) => {
