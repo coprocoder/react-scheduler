@@ -137,6 +137,7 @@ const Editor = () => {
         // Create/Edit local data
         body.event_id =
           selectedEvent?.event_id || Date.now().toString(36) + Math.random().toString(36).slice(2);
+        body[resourceFields.idField] = selectedResource;
       }
 
       confirmEvent(body, action);

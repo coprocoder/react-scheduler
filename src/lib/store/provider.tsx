@@ -107,6 +107,7 @@ export const StoreProvider = ({ children, initial }: Props) => {
     } else {
       updatedEvents = state.events.concat(event);
     }
+    console.log("confirmEvent", event);
     set((prev) => ({ ...prev, events: updatedEvents }));
   };
 
@@ -132,23 +133,31 @@ export const StoreProvider = ({ children, initial }: Props) => {
     // Check if has resource and if is multiple
     const resField = state.fields.find((f) => f.name === resKey);
     const isMultiple = !!resField?.config?.multiple;
+    const eResource = droppedEvent[resKey as string];
     let newResource = resVal as string | number | string[] | number[];
+
+    const updateRes = (currentRes: any) => {
+      // if dropped on already owned resource
+      if (currentRes.includes(resVal)) {
+        // Omit if dropped on same time slot for multiple event
+        if (isEqual(droppedEvent.start, startTime)) {
+          return;
+        }
+        newResource = currentRes;
+      } else {
+        // if have multiple resource ? add other : move to other
+        newResource = currentRes.length > 1 ? [...currentRes, resVal] : [resVal];
+      }
+    };
+
     if (resField) {
-      const eResource = droppedEvent[resKey as string];
       const currentRes = arraytizeFieldVal(resField, eResource, droppedEvent).value;
       if (isMultiple) {
-        // if dropped on already owned resource
-        if (currentRes.includes(resVal)) {
-          // Omit if dropped on same time slot for multiple event
-          if (isEqual(droppedEvent.start, startTime)) {
-            return;
-          }
-          newResource = currentRes;
-        } else {
-          // if have multiple resource ? add other : move to other
-          newResource = currentRes.length > 1 ? [...currentRes, resVal] : [resVal];
-        }
+        updateRes(currentRes);
       }
+    } else {
+      const currentRes = Array.isArray(eResource) ? eResource : [eResource];
+      updateRes(currentRes);
     }
 
     // Omit if dropped on same time slot for non multiple events
