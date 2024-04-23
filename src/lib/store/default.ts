@@ -30,7 +30,7 @@ const defaultDay = {
 };
 
 const defaultResourceFields = {
-  idField: "assignee",
+  idField: "user_id",
   textField: "text",
   subTextField: "subtext",
   avatarField: "avatar",

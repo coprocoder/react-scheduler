@@ -63,8 +63,8 @@ const TodayEvents = ({
               top,
               width:
                 alreadyRendered.length > 0
-                  ? `calc(100% - ${100 - 98 / (alreadyRendered.length + 1)}%)`
-                  : "98%", // Leave some space to click cell
+                  ? `calc(100% - ${100 - 96 / (alreadyRendered.length + 1)}%)`
+                  : "96%", // Leave some space to click cell
               zIndex: todayEvents.length + i,
               [direction === "rtl" ? "right" : "left"]:
                 alreadyRendered.length > 0

@@ -1,5 +1,5 @@
 import { Scheduler } from "./lib";
-import { EVENTS } from "./events";
+import { EVENTS, RESOURCES } from "./events";
 import { useRef } from "react";
 import { Typography } from "@mui/material";
 import { SchedulerRef } from "./lib/types";
@@ -23,6 +23,7 @@ function App() {
     <Scheduler
       ref={calendarRef}
       events={EVENTS}
+      resources={RESOURCES}
       hourFormat={"24"}
       day={{
         startHour: 7,

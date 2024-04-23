@@ -7,15 +7,17 @@ export const EVENTS: ProcessedEvent[] = [
     start: new Date(new Date(new Date(new Date().setHours(9)).setMinutes(0)).setSeconds(0)),
     end: new Date(new Date(new Date(new Date().setHours(10)).setMinutes(0)).setSeconds(0)),
     disabled: true,
-    admin_id: [1, 2, 3, 4],
+    user_id: 1,
   },
   {
     event_id: 2,
     title: "Event 2",
     start: new Date(new Date(new Date(new Date().setHours(10)).setMinutes(0)).setSeconds(0)),
     end: new Date(new Date(new Date(new Date().setHours(12)).setMinutes(0)).setSeconds(0)),
-    admin_id: 2,
+    user_id: 3,
     color: "#50b500",
+    editable: false,
+    deletable: false,
     agendaAvatar: "E",
   },
   {
@@ -23,12 +25,18 @@ export const EVENTS: ProcessedEvent[] = [
     title: "Event 3",
     start: new Date(new Date(new Date(new Date().setHours(11)).setMinutes(0)).setSeconds(0)),
     end: new Date(new Date(new Date(new Date().setHours(12)).setMinutes(0)).setSeconds(0)),
-    admin_id: 1,
-    editable: false,
+    user_id: [1, 2, 3, 4],
     deletable: false,
   },
   {
     event_id: 4,
+    title: "Event 3",
+    start: new Date(new Date(new Date(new Date().setHours(14)).setMinutes(0)).setSeconds(0)),
+    end: new Date(new Date(new Date(new Date().setHours(15)).setMinutes(0)).setSeconds(0)),
+    user_id: [1, 3],
+  },
+  {
+    event_id: 5,
     title: "Event 4",
     start: new Date(
       new Date(
@@ -40,25 +48,9 @@ export const EVENTS: ProcessedEvent[] = [
         new Date(new Date(new Date().setHours(11)).setMinutes(0)).setDate(new Date().getDate() - 2)
       ).setSeconds(0)
     ),
-    admin_id: [2, 3],
+    user_id: [2, 3],
     color: "#900000",
     allDay: true,
-  },
-  {
-    event_id: 5,
-    title: "Event 5",
-    start: new Date(
-      new Date(
-        new Date(new Date(new Date().setHours(10)).setMinutes(30)).setDate(new Date().getDate() - 2)
-      ).setSeconds(0)
-    ),
-    end: new Date(
-      new Date(
-        new Date(new Date(new Date().setHours(14)).setMinutes(0)).setDate(new Date().getDate() - 2)
-      ).setSeconds(0)
-    ),
-    admin_id: 2,
-    editable: true,
   },
   {
     event_id: 6,
@@ -69,7 +61,7 @@ export const EVENTS: ProcessedEvent[] = [
       ).setSeconds(0)
     ),
     end: new Date(new Date(new Date(new Date().setHours(23)).setMinutes(0)).setSeconds(0)),
-    admin_id: 2,
+    user_id: 2,
     allDay: true,
     sx: { color: "purple" },
   },
@@ -86,7 +78,7 @@ export const EVENTS: ProcessedEvent[] = [
         new Date(new Date(new Date().setHours(14)).setMinutes(30)).setDate(new Date().getDate() - 3)
       ).setSeconds(0)
     ),
-    admin_id: 1,
+    user_id: 1,
     draggable: false,
     color: "#8000cc",
   },
@@ -107,39 +99,39 @@ export const EVENTS: ProcessedEvent[] = [
         )
       ).setSeconds(0)
     ),
-    admin_id: 1,
+    user_id: 1,
     color: "#8000cc",
   },
 ];
 
 export const RESOURCES = [
   {
-    admin_id: 1,
-    title: "One",
-    mobile: "555666777",
+    user_id: 1,
+    text: "User One",
+    subtext: "Sales Manager 1",
     avatar: "",
     color: "#ab2d2d",
   },
   {
-    admin_id: 2,
-    title: "Two is very long name",
-    mobile: "555666777",
-    avatar: "https://picsum.photos/200/300",
-    color: "#58ab2d",
+    user_id: 2,
+    text: "Two is very long name",
+    subtext: "Sales Manager 2",
+    avatar: "https://cs14.pikabu.ru/avatars/1021/x1021816-1788094303.png",
+    color: "#439417",
   },
   {
-    admin_id: 3,
-    title: "Three",
-    mobile: "555666777",
-    avatar: "https://picsum.photos/200/300",
+    user_id: 3,
+    text: "User Three",
+    subtext: "Sales Manager Three",
+    avatar: "https://cs14.pikabu.ru/avatars/3400/x3400884-1273444445.png",
     color: "#a001a2",
   },
   {
-    admin_id: 4,
-    title: "Four",
-    mobile: "555666777",
-    avatar: "https://picsum.photos/200/300",
-    color: "#08c5bd",
+    user_id: 4,
+    text: "User Four",
+    subtext: "Sales Manager Four",
+    avatar: "https://cs13.pikabu.ru/avatars/658/x658267-1013849002.png",
+    color: "#0078c4",
   },
 ];
 
