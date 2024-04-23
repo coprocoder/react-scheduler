@@ -8,6 +8,8 @@ import {
   Grid,
   useTheme,
   useMediaQuery,
+  Typography,
+  IconButton,
 } from "@mui/material";
 import { addMinutes, differenceInMinutes } from "date-fns";
 import { EditorDatePicker } from "../components/inputs/DatePicker";
@@ -19,11 +21,13 @@ import {
   InputTypes,
   ProcessedEvent,
   SchedulerHelpers,
+  EventService,
 } from "../types";
 import { EditorSelect } from "../components/inputs/SelectInput";
 import { arraytizeFieldVal } from "../helpers/generals";
 import { SelectedRange } from "../store/types";
 import useStore from "../hooks/useStore";
+import DeleteRounded from "@mui/icons-material/DeleteRounded";
 
 export type StateItem = {
   value: any;
@@ -54,11 +58,17 @@ const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, 
       validity: true,
       type: "hidden",
     },
-    title: {
-      value: event?.title || "",
-      validity: !!event?.title,
+    clientName: {
+      value: event?.clientName || "",
+      validity: !!event?.clientName,
       type: "input",
-      config: { label: "Title", required: true, min: 3 },
+      config: { label: "ФИО", required: true, min: 3 },
+    },
+    clientPhone: {
+      value: event?.clientNamee || "",
+      validity: !!event?.clientName,
+      type: "input",
+      config: { label: "Телефон", required: true, min: 3 },
     },
     start: {
       value: event?.start || new Date(),
@@ -71,6 +81,12 @@ const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, 
       validity: true,
       type: "date",
       config: { label: "End", sm: 6 },
+    },
+    comment: {
+      value: event?.comment || "",
+      validity: !!event?.comment,
+      type: "textarea",
+      config: { label: "Комментарий" },
     },
     ...customFields,
   };
@@ -97,6 +113,9 @@ const Editor = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const serviceDefault = { title: "", amount: 12, priceOne: 5 };
+  const [services, setSevices] = useState(selectedEvent?.services || [serviceDefault]);
+
   const handleEditorState = (name: string, value: any, validity: boolean) => {
     setState((prev) => {
       return {
@@ -104,6 +123,22 @@ const Editor = () => {
         [name]: { ...prev[name], value, validity },
       };
     });
+  };
+
+  const handleServiceState = (index: number, key: string, value: string | number) => {
+    const newServices = [...services];
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    newServices[index][key] = value;
+    setSevices(newServices);
+  };
+  const handleServiceAdd = () => {
+    setSevices([...services, serviceDefault]);
+  };
+  const handleServiceDelete = (index: number) => {
+    const newServices = [...services];
+    newServices.splice(index, 1);
+    setSevices(newServices);
   };
 
   const handleClose = (clearState?: boolean) => {
@@ -138,6 +173,7 @@ const Editor = () => {
         body.event_id =
           selectedEvent?.event_id || Date.now().toString(36) + Math.random().toString(36).slice(2);
         body[resourceFields.idField] = selectedResource;
+        body.services = services;
       }
 
       confirmEvent(body, action);
@@ -148,6 +184,7 @@ const Editor = () => {
       triggerLoading(false);
     }
   };
+
   const renderInputs = (key: string) => {
     const stateItem = state[key];
     switch (stateItem.type) {
@@ -156,6 +193,18 @@ const Editor = () => {
           <EditorInput
             value={stateItem.value}
             name={key}
+            onChange={handleEditorState}
+            touched={touched}
+            {...stateItem.config}
+            label={translations.event[key] || stateItem.config?.label}
+          />
+        );
+      case "textarea":
+        return (
+          <EditorInput
+            value={stateItem.value}
+            name={key}
+            multiline={true}
             onChange={handleEditorState}
             touched={touched}
             {...stateItem.config}
@@ -191,6 +240,44 @@ const Editor = () => {
     }
   };
 
+  const renderServices = (service: EventService, i: number) => {
+    return (
+      <>
+        <Grid item key={"title"} xs={7}>
+          <EditorInput
+            value={service.title}
+            name={"title"}
+            onChange={(name, value, isValid) => handleServiceState(i, name, value)}
+            touched={touched}
+          />
+        </Grid>
+        <Grid item key={"amount"} xs={2}>
+          <EditorInput
+            value={service.amount.toString()}
+            name={"amount"}
+            onChange={(name, value, isValid) => handleServiceState(i, name, value)}
+            touched={touched}
+            decimal={true}
+          />
+        </Grid>
+        <Grid item key={"price"} xs={2}>
+          <EditorInput
+            value={(service.priceOne * service.amount).toString()}
+            name={"price"}
+            onChange={() => {}}
+            touched={touched}
+            disabled={true}
+          />
+        </Grid>
+        <Grid item key={"price"} xs={1} alignContent={"center"}>
+          <IconButton size={"large"} style={{ padding: 10 }} onClick={() => handleServiceDelete(i)}>
+            <DeleteRounded />
+          </IconButton>
+        </Grid>
+      </>
+    );
+  };
+
   const renderEditor = () => {
     if (customEditor) {
       const schedulerHelpers: SchedulerHelpers = {
@@ -203,6 +290,7 @@ const Editor = () => {
       };
       return customEditor(schedulerHelpers);
     }
+
     return (
       <Fragment>
         <DialogTitle>
@@ -218,6 +306,15 @@ const Editor = () => {
                 </Grid>
               );
             })}
+            <Typography variant="body1" margin={2} marginBottom={0} width={"100%"}>
+              {"Информация об услуге"}
+            </Typography>
+            {services.map((item: EventService, i: number) => {
+              return renderServices(item, i);
+            })}
+            <Button color="inherit" fullWidth onClick={() => handleServiceAdd()} sx={{ margin: 2 }}>
+              {"Добавить услугу"}
+            </Button>
           </Grid>
         </DialogContent>
         <DialogActions>

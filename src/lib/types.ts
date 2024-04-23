@@ -49,22 +49,35 @@ export interface CellRenderedProps {
 }
 interface CalendarEvent {
   event_id: number | string;
-  title: string;
+  clientName: string;
+  clientPhone: string;
+  services?: EventService[];
+  comment?: string;
+  // date
   start: Date;
   end: Date;
+  // settings
   disabled?: boolean;
-  color?: string;
-  textColor?: string;
   editable?: boolean;
   deletable?: boolean;
   draggable?: boolean;
   allDay?: boolean;
+  // styles
+  color?: string;
+  textColor?: string;
   /**
    * @default " "
    * passed as a children to mui <Avatar /> component
    */
   agendaAvatar?: React.ReactElement | string;
 }
+
+export interface EventService {
+  title: string;
+  amount: number;
+  priceOne: number;
+}
+
 export interface Translations {
   navigation: Record<View, string> & { today: string; agenda: string };
   form: {
@@ -92,7 +105,7 @@ export interface Translations {
   loading: string;
 }
 
-export type InputTypes = "input" | "date" | "select" | "hidden";
+export type InputTypes = "input" | "textarea" | "date" | "select" | "hidden";
 
 export interface EventRendererProps
   extends Pick<

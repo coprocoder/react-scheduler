@@ -77,16 +77,16 @@ const EventItem = ({ event, multiday, hasPrev, hasNext, showdate = true }: Event
 
     let item = (
       <div style={{ padding: "2px 6px" }}>
-        <Typography variant="subtitle2" style={{ fontSize: 12 }} noWrap>
-          {event.title}
-        </Typography>
         {showdate && (
-          <Typography style={{ fontSize: 11 }} noWrap>
+          <Typography variant="body2" noWrap>
             {`${format(event.start, hFormat, {
               locale,
             })} - ${format(event.end, hFormat, { locale })}`}
           </Typography>
         )}
+        <Typography variant="subtitle2" style={{ fontSize: 12 }} noWrap>
+          {event.clientName}
+        </Typography>
       </div>
     );
     if (multiday) {
@@ -107,7 +107,7 @@ const EventItem = ({ event, multiday, hasPrev, hasNext, showdate = true }: Event
             )}
           </Typography>
           <Typography variant="subtitle2" align="center" sx={{ fontSize: 12 }} noWrap>
-            {event.title}
+            {event.clientName}
           </Typography>
           <Typography sx={{ fontSize: 11 }} noWrap>
             {hasNext ? (

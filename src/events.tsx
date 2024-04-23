@@ -3,7 +3,8 @@ import { ProcessedEvent } from "./lib/types";
 export const EVENTS: ProcessedEvent[] = [
   {
     event_id: 1,
-    title: "Event 1 (Disabled)",
+    clientName: "Event 1 (Disabled)",
+    clientPhone: "1",
     start: new Date(new Date(new Date(new Date().setHours(9)).setMinutes(0)).setSeconds(0)),
     end: new Date(new Date(new Date(new Date().setHours(10)).setMinutes(0)).setSeconds(0)),
     disabled: true,
@@ -11,7 +12,8 @@ export const EVENTS: ProcessedEvent[] = [
   },
   {
     event_id: 2,
-    title: "Event 2",
+    clientName: "Event 2 (constant)",
+    clientPhone: "2",
     start: new Date(new Date(new Date(new Date().setHours(10)).setMinutes(0)).setSeconds(0)),
     end: new Date(new Date(new Date(new Date().setHours(11)).setMinutes(15)).setSeconds(0)),
     user_id: 3,
@@ -22,7 +24,8 @@ export const EVENTS: ProcessedEvent[] = [
   },
   {
     event_id: 3,
-    title: "Event 3",
+    clientName: "Event 3 (not deletable)",
+    clientPhone: "3",
     start: new Date(new Date(new Date(new Date().setHours(11)).setMinutes(0)).setSeconds(0)),
     end: new Date(new Date(new Date(new Date().setHours(12)).setMinutes(0)).setSeconds(0)),
     user_id: [2, 4],
@@ -30,14 +33,16 @@ export const EVENTS: ProcessedEvent[] = [
   },
   {
     event_id: 4,
-    title: "Event 4",
+    clientName: "Event 4",
+    clientPhone: "4",
     start: new Date(new Date(new Date(new Date().setHours(13)).setMinutes(0)).setSeconds(0)),
     end: new Date(new Date(new Date(new Date().setHours(14)).setMinutes(0)).setSeconds(0)),
     user_id: [1, 3],
   },
   {
     event_id: 5,
-    title: "Event 4",
+    clientName: "Event 5",
+    clientPhone: "5",
     start: new Date(
       new Date(
         new Date(new Date(new Date().setHours(9)).setMinutes(30)).setDate(new Date().getDate() - 2)
@@ -54,7 +59,8 @@ export const EVENTS: ProcessedEvent[] = [
   },
   {
     event_id: 6,
-    title: "Event 6",
+    clientName: "Event 6",
+    clientPhone: "6",
     start: new Date(
       new Date(
         new Date(new Date(new Date().setHours(20)).setMinutes(30)).setDate(new Date().getDate() - 3)
@@ -67,7 +73,8 @@ export const EVENTS: ProcessedEvent[] = [
   },
   {
     event_id: 7,
-    title: "Event 7 (Not draggable)",
+    clientName: "Event 7 (Not draggable)",
+    clientPhone: "7",
     start: new Date(
       new Date(
         new Date(new Date(new Date().setHours(10)).setMinutes(30)).setDate(new Date().getDate() - 3)
@@ -84,7 +91,8 @@ export const EVENTS: ProcessedEvent[] = [
   },
   {
     event_id: 8,
-    title: "Event 8",
+    clientName: "Event 8",
+    clientPhone: "8",
     start: new Date(
       new Date(
         new Date(new Date(new Date().setHours(10)).setMinutes(30)).setDate(
