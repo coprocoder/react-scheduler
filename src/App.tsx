@@ -24,6 +24,7 @@ function App() {
       ref={calendarRef}
       events={EVENTS}
       resources={RESOURCES}
+      // resourceViewMode={"tabs"}
       hourFormat={"24"}
       day={{
         startHour: 7,
@@ -33,6 +34,7 @@ function App() {
         hourRenderer: hourRender,
       }}
       view={"day"}
+      navigation={false}
       disableViewNavigator={true}
       // events ={generateRandomEvents(200)}
     />

@@ -8,7 +8,7 @@ export interface SchedulerState extends SchedulerProps {
   dialog: boolean;
   selectedRange?: SelectedRange;
   selectedEvent?: ProcessedEvent;
-  selectedResource?: DefaultRecourse["assignee"];
+  selectedResource?: DefaultRecourse["user_id"];
   currentDragged?: ProcessedEvent;
   enableAgenda?: boolean;
 }

@@ -30,7 +30,7 @@ export const EVENTS: ProcessedEvent[] = [
   },
   {
     event_id: 4,
-    title: "Event 3",
+    title: "Event 4",
     start: new Date(new Date(new Date(new Date().setHours(14)).setMinutes(0)).setSeconds(0)),
     end: new Date(new Date(new Date(new Date().setHours(15)).setMinutes(0)).setSeconds(0)),
     user_id: [1, 3],

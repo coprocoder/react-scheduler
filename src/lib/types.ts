@@ -164,7 +164,7 @@ export type RemoteQuery = {
   view: "day" | "week" | "month";
 };
 export type DefaultRecourse = {
-  assignee?: string | number;
+  user_id?: string | number;
   text?: string;
   subtext?: string;
   avatar?: string;

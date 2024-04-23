@@ -65,7 +65,7 @@ const ResourcesTabTables = ({ renderChildren }: WithResourcesProps) => {
     };
   });
 
-  const setTab = (tab: DefaultRecourse["assignee"]) => {
+  const setTab = (tab: DefaultRecourse["user_id"]) => {
     handleState(tab, "selectedResource");
   };
 
