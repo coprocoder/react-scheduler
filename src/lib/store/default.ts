@@ -43,11 +43,11 @@ const defaultTranslations = (trans: Partial<SchedulerProps["translations"]> = {}
   return {
     navigation: Object.assign(
       {
-        month: "Month",
-        week: "Week",
-        day: "Day",
-        agenda: "Agenda",
-        today: "Today",
+        month: "Месяц",
+        week: "Неделя",
+        day: "День",
+        agenda: "Повестка дня",
+        today: "Сегодня",
       },
       navigation
     ),
@@ -55,9 +55,9 @@ const defaultTranslations = (trans: Partial<SchedulerProps["translations"]> = {}
       {
         addTitle: "Add Event",
         editTitle: "Edit Event",
-        confirm: "Confirm",
-        delete: "Delete",
-        cancel: "Cancel",
+        confirm: "Подтвердить",
+        delete: "Удалить",
+        cancel: "Отменить",
       },
       form
     ),

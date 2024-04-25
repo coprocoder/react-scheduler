@@ -36,7 +36,12 @@ function App() {
       view={"day"}
       navigation={false}
       disableViewNavigator={true}
+      // === DEBUG PROPS
       // events ={generateRandomEvents(200)}
+      // fields={[{
+      //   name: "clientName",
+      //   type: "hidden",
+      // }]}
     />
   );
 }

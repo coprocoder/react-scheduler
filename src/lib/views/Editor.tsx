@@ -2,7 +2,6 @@ import { Fragment, useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogTitle,
   DialogActions,
   Button,
   Grid,
@@ -10,6 +9,8 @@ import {
   useMediaQuery,
   Typography,
   IconButton,
+  Box,
+  Paper,
 } from "@mui/material";
 import { addMinutes, differenceInMinutes } from "date-fns";
 import { EditorDatePicker } from "../components/inputs/DatePicker";
@@ -23,11 +24,12 @@ import {
   SchedulerHelpers,
   EventService,
 } from "../types";
-import { EditorSelect } from "../components/inputs/SelectInput";
+import { EditorSelect, SelectOption } from "../components/inputs/SelectInput";
 import { arraytizeFieldVal } from "../helpers/generals";
 import { SelectedRange } from "../store/types";
 import useStore from "../hooks/useStore";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
+import { Add } from "@mui/icons-material";
 
 export type StateItem = {
   value: any;
@@ -37,6 +39,21 @@ export type StateItem = {
 };
 
 export type StateEvent = (ProcessedEvent & SelectedRange) | Record<string, any>;
+
+// TODO: create currency formatter
+const formatRUB = (value: number) =>
+  new Intl.NumberFormat("ru-RU", {
+    style: "currency",
+    currency: "RUB",
+  }).format(value);
+
+// TODO: props -> store -> handle
+const COMMISSION = 0.9;
+const SERVICES: Array<SelectOption> = [
+  { id: 1, text: "Маникюр", value: 1 },
+  { id: 2, text: "Укладка", value: 2 },
+  { id: 3, text: "Окрашивание", value: 3 },
+];
 
 const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, StateItem> => {
   const customFields = {} as Record<string, StateItem>;
@@ -52,6 +69,8 @@ const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, 
     };
   }
 
+  // TODO: group sections
+  // TODO: change order
   return {
     event_id: {
       value: event?.event_id || null,
@@ -62,7 +81,7 @@ const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, 
       value: event?.clientName || "",
       validity: !!event?.clientName,
       type: "input",
-      config: { label: "ФИО", required: true, min: 3 },
+      config: { label: "ФИО", title: "Данные клиента", required: true, min: 3 },
     },
     clientPhone: {
       value: event?.clientNamee || "",
@@ -86,7 +105,19 @@ const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, 
       value: event?.comment || "",
       validity: !!event?.comment,
       type: "textarea",
-      config: { label: "Комментарий" },
+      config: { title: "Комментарий" },
+    },
+    totalPrice: {
+      value: formatRUB(event?.totalPrice || 0),
+      validity: !!event?.totalPrice,
+      type: "text",
+      config: { title: "Сумма к оплате", titleInline: true },
+    },
+    totalIncome: {
+      value: formatRUB(event?.totalIncome || 0),
+      validity: !!event?.totalIncome,
+      type: "text",
+      config: { title: "Доход мастера", titleInline: true },
     },
     ...customFields,
   };
@@ -113,8 +144,9 @@ const Editor = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const serviceDefault = { title: "", amount: 12, priceOne: 5 };
-  const [services, setSevices] = useState(selectedEvent?.services || [serviceDefault]);
+  const [services, setSevices] = useState(
+    selectedEvent?.services || [{ title: "", amount: 0, priceOne: 5, priceTotal: 0 }]
+  );
 
   const handleEditorState = (name: string, value: any, validity: boolean) => {
     setState((prev) => {
@@ -125,15 +157,32 @@ const Editor = () => {
     });
   };
 
-  const handleServiceState = (index: number, key: string, value: string | number) => {
+  const handleServiceState = (
+    index: number,
+    key: string,
+    value: string | number,
+    isValid: boolean
+  ) => {
+    if (!isValid) return;
     const newServices = [...services];
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     newServices[index][key] = value;
+
+    if (["amount", "priceOne"].includes(key)) {
+      newServices[index].priceTotal = newServices[index].amount * newServices[index].priceOne;
+
+      const totalPrice = newServices.reduce((sum, el) => sum + el.priceTotal, 0);
+      handleEditorState("totalPrice", formatRUB(totalPrice), state.totalPrice.validity);
+      handleEditorState(
+        "totalIncome",
+        formatRUB(totalPrice * COMMISSION),
+        state.totalIncome.validity
+      );
+    }
     setSevices(newServices);
   };
   const handleServiceAdd = () => {
-    setSevices([...services, serviceDefault]);
+    setSevices([...services, { title: "", amount: 0, priceOne: 5, priceTotal: 0 }]);
   };
   const handleServiceDelete = (index: number) => {
     const newServices = [...services];
@@ -235,34 +284,61 @@ const Editor = () => {
             label={translations.event[key] || stateItem.config?.label}
           />
         );
+      case "text":
+        return <Typography variant="body1">{stateItem.value}</Typography>;
       default:
         return "";
     }
   };
 
-  const renderServices = (service: EventService, i: number) => {
+  const renderServices = () => {
+    return (
+      <>
+        <Typography variant="body1" margin={2} marginBottom={0} width={"100%"}>
+          {"Информация об услуге"}
+        </Typography>
+        {services.map((item: EventService, i: number) => {
+          return renderService(item, i);
+        })}
+        <Box width="100%">
+          <Button
+            color="inherit"
+            onClick={() => handleServiceAdd()}
+            startIcon={<Add />}
+            sx={{ margin: 2, background: theme.palette.grey["200"] }}
+          >
+            {"Добавить услугу"}
+          </Button>
+        </Box>
+      </>
+    );
+  };
+
+  const renderService = (service: EventService, i: number) => {
     return (
       <>
         <Grid item key={"title"} xs={7}>
-          <EditorInput
+          <EditorSelect
             value={service.title}
             name={"title"}
-            onChange={(name, value, isValid) => handleServiceState(i, name, value)}
+            options={SERVICES || []}
+            onChange={(name, value, isValid) => handleServiceState(i, name, value, isValid)}
             touched={touched}
+            label={"Выберите услугу"}
           />
         </Grid>
         <Grid item key={"amount"} xs={2}>
           <EditorInput
             value={service.amount.toString()}
             name={"amount"}
-            onChange={(name, value, isValid) => handleServiceState(i, name, value)}
+            onChange={(name, value, isValid) => handleServiceState(i, name, Number(value), isValid)}
             touched={touched}
             decimal={true}
           />
         </Grid>
         <Grid item key={"price"} xs={2}>
           <EditorInput
-            value={(service.priceOne * service.amount).toString()}
+            value={formatRUB(service.priceTotal)}
             name={"price"}
             onChange={() => {}}
             touched={touched}
@@ -293,36 +369,53 @@ const Editor = () => {
 
     return (
       <Fragment>
-        <DialogTitle>
-          {selectedEvent ? translations.form.editTitle : translations.form.addTitle}
-        </DialogTitle>
+        {/*<DialogTitle>*/}
+        {/*  {selectedEvent ? translations.form.editTitle : translations.form.addTitle}*/}
+        {/*</DialogTitle>*/}
         <DialogContent style={{ overflowX: "hidden" }}>
+          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Paper sx={{ background: "#B3BDFD", marginLeft: "auto", padding: "0.2rem 3rem" }}>
+              {"Запись подтверждена"}
+            </Paper>
+          </Box>
           <Grid container spacing={2}>
             {Object.keys(state).map((key) => {
               const item = state[key];
               return (
-                <Grid item key={key} sm={item.config?.sm} xs={12}>
-                  {renderInputs(key)}
-                </Grid>
+                <>
+                  <Grid
+                    item
+                    key={key}
+                    sm={item.config?.sm}
+                    xs={12}
+                    display={item.config?.titleInline ? "flex" : "block"}
+                  >
+                    {item.config?.title && (
+                      <Typography
+                        variant="body1"
+                        marginRight={item.config?.titleInline ? 2 : 0}
+                        marginBottom={1}
+                      >
+                        {item.config?.title}
+                      </Typography>
+                    )}
+                    {renderInputs(key)}
+                  </Grid>
+                  {key === "end" && renderServices()}
+                </>
               );
             })}
-            <Typography variant="body1" margin={2} marginBottom={0} width={"100%"}>
-              {"Информация об услуге"}
-            </Typography>
-            {services.map((item: EventService, i: number) => {
-              return renderServices(item, i);
-            })}
-            <Button color="inherit" fullWidth onClick={() => handleServiceAdd()} sx={{ margin: 2 }}>
-              {"Добавить услугу"}
-            </Button>
           </Grid>
         </DialogContent>
-        <DialogActions>
-          <Button color="inherit" fullWidth onClick={() => handleClose()}>
-            {translations.form.cancel}
+        <DialogActions sx={{ gap: 3, margin: 2 }}>
+          <Button fullWidth onClick={handleConfirm} sx={{ background: "#FFCB00" }}>
+            {"Сохранить"}
           </Button>
-          <Button color="primary" fullWidth onClick={handleConfirm}>
+          <Button fullWidth onClick={handleConfirm} sx={{ background: "#1EB44F" }}>
             {translations.form.confirm}
+          </Button>
+          <Button fullWidth variant={"outlined"} color="primary" onClick={() => handleClose()}>
+            {"Выход"}
           </Button>
         </DialogActions>
       </Fragment>

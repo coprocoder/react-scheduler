@@ -52,6 +52,8 @@ interface CalendarEvent {
   clientName: string;
   clientPhone: string;
   services?: EventService[];
+  totalPrice?: string;
+  totalIncome?: string;
   comment?: string;
   // date
   start: Date;
@@ -76,6 +78,7 @@ export interface EventService {
   title: string;
   amount: number;
   priceOne: number;
+  priceTotal: number;
 }
 
 export interface Translations {
@@ -105,7 +108,7 @@ export interface Translations {
   loading: string;
 }
 
-export type InputTypes = "input" | "textarea" | "date" | "select" | "hidden";
+export type InputTypes = "input" | "textarea" | "date" | "select" | "hidden" | "text";
 
 export interface EventRendererProps
   extends Pick<
@@ -117,6 +120,9 @@ export interface EventRendererProps
 export interface FieldInputProps {
   /** Available to all InputTypes */
   label?: string;
+  /** Available to all InputTypes */
+  title?: string;
+  titleInline?: boolean;
   /** Available to all InputTypes */
   placeholder?: string;
   /** Available to all InputTypes
