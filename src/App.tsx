@@ -1,5 +1,5 @@
 import { Scheduler } from "./lib";
-import { EVENTS, RESOURCES } from "./events";
+import { EVENTS, RESOURCES, SERVICES } from "./events";
 import { useRef } from "react";
 import { Typography } from "@mui/material";
 import { useWindowResize } from "./lib/hooks/useWindowResize";
@@ -27,6 +27,7 @@ function App() {
       ref={calendarRef}
       events={EVENTS}
       resources={RESOURCES}
+      services={SERVICES}
       resourceViewMode={windowSize.width < 900 ? "tabs" : "default"}
       hourFormat={"24"}
       day={{

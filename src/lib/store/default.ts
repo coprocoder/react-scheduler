@@ -109,6 +109,7 @@ export const defaultProps = (props: Partial<SchedulerProps>) => {
         onConfirm: undefined,
         onDelete: undefined,
         viewerExtraComponent: undefined,
+        services: [],
         resources: [],
         resourceHeaderComponent: undefined,
         resourceViewMode: "default",

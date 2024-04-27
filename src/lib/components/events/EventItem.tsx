@@ -1,5 +1,5 @@
 import { Fragment, MouseEvent, useMemo, useState } from "react";
-import { Typography, ButtonBase, useTheme } from "@mui/material";
+import { Typography, ButtonBase, useTheme, Box } from "@mui/material";
 import { format } from "date-fns";
 import { ProcessedEvent } from "../../types";
 import ArrowRightRoundedIcon from "@mui/icons-material/ArrowRightRounded";
@@ -29,6 +29,7 @@ const EventItem = ({ event, multiday, hasPrev, hasNext, showdate = true }: Event
     draggable,
     editable,
     disableViewer,
+    services,
   } = useStore();
   const dragProps = useDragAttributes(event);
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
@@ -76,7 +77,7 @@ const EventItem = ({ event, multiday, hasPrev, hasNext, showdate = true }: Event
     }
 
     let item = (
-      <div style={{ padding: "2px 6px" }}>
+      <div style={{ padding: "2px 6px", display: "flex", flexDirection: "column" }}>
         {showdate && (
           <Typography variant="body2" noWrap>
             {`${format(event.start, hFormat, {
@@ -84,9 +85,16 @@ const EventItem = ({ event, multiday, hasPrev, hasNext, showdate = true }: Event
             })} - ${format(event.end, hFormat, { locale })}`}
           </Typography>
         )}
-        <Typography variant="subtitle2" style={{ fontSize: 12 }} noWrap>
-          {event.clientName}
-        </Typography>
+        {event.services?.map((e, i) => (
+          <Typography key={`${e.id_service}_${i}`} sx={{ fontSize: 11 }} noWrap>
+            {services.find((x) => x.id === e.id_service)?.text}
+          </Typography>
+        ))}
+        <Box marginTop={"auto"}>
+          <Typography variant="subtitle2" style={{ fontSize: 12 }} noWrap>
+            {event.clientName}
+          </Typography>
+        </Box>
       </div>
     );
     if (multiday) {

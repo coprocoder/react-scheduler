@@ -36,6 +36,7 @@ export type DayHours =
   | 22
   | 23
   | 24;
+
 export interface CellRenderedProps {
   day: Date;
   start: Date;
@@ -47,6 +48,7 @@ export interface CellRenderedProps {
   onDragLeave(e: DragEvent<HTMLButtonElement>): void;
   onDrop(e: DragEvent<HTMLButtonElement>): void;
 }
+
 interface CalendarEvent {
   event_id: number | string;
   clientName: string;
@@ -75,7 +77,7 @@ interface CalendarEvent {
 }
 
 export interface EventService {
-  title: string;
+  id_service: number;
   amount: number;
   priceOne: number;
   priceTotal: number;
@@ -117,6 +119,7 @@ export interface EventRendererProps
   > {
   event: ProcessedEvent;
 }
+
 export interface FieldInputProps {
   /** Available to all InputTypes */
   label?: string;
@@ -167,6 +170,7 @@ export interface FieldInputProps {
   /* Used for Grid alignment in a single row md | sm | xs */
   xs?: GridSize;
 }
+
 export interface FieldProps {
   name: string;
   type: InputTypes;
@@ -175,6 +179,7 @@ export interface FieldProps {
   default?: string | number | Date | any;
   config?: FieldInputProps;
 }
+
 export type ProcessedEvent = CalendarEvent & Record<string, any>;
 export type EventActions = "create" | "edit";
 export type RemoteQuery = {
@@ -205,6 +210,7 @@ export interface SchedulerHelpers {
   onConfirm(event: ProcessedEvent | ProcessedEvent[], action: EventActions): void;
   [resourceKey: string]: unknown;
 }
+
 export interface SchedulerProps {
   /**Min height of table
    * @default 600
@@ -265,6 +271,8 @@ export interface SchedulerProps {
   disableViewer?: boolean;
   /**Resources array to split event views with resources */
   resources: DefaultRecourse[];
+  /** TODO: service description */
+  services: SelectOption[];
   /**Map resources fields */
   resourceFields: ResourceFields;
   /**Override header component of resource */

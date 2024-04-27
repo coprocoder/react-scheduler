@@ -49,11 +49,6 @@ const formatRUB = (value: number) =>
 
 // TODO: props -> store -> handle
 const COMMISSION = 0.9;
-const SERVICES: Array<SelectOption> = [
-  { id: 1, text: "Маникюр", value: 1 },
-  { id: 2, text: "Укладка", value: 2 },
-  { id: 3, text: "Окрашивание", value: 3 },
-];
 
 const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, StateItem> => {
   const customFields = {} as Record<string, StateItem>;
@@ -84,8 +79,8 @@ const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, 
       config: { label: "ФИО", title: "Данные клиента", required: true, min: 3 },
     },
     clientPhone: {
-      value: event?.clientNamee || "",
-      validity: !!event?.clientName,
+      value: event?.clientPhone || "",
+      validity: !!event?.clientPhone,
       type: "input",
       config: { label: "Телефон", required: true, min: 3 },
     },
@@ -138,14 +133,16 @@ const Editor = () => {
     confirmEvent,
     dialogMaxWidth,
     translations,
+    services,
   } = useStore();
   const [state, setState] = useState(initialState(fields, selectedEvent || selectedRange));
   const [touched, setTouched] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const [services, setSevices] = useState(
-    selectedEvent?.services || [{ title: "", amount: 0, priceOne: 5, priceTotal: 0 }]
+  const serviceDefault = { id_service: undefined as any, amount: 0, priceOne: 5, priceTotal: 0 };
+  const [servicesState, setSevicesState] = useState(
+    selectedEvent?.services || [{ ...serviceDefault }]
   );
 
   const handleEditorState = (name: string, value: any, validity: boolean) => {
@@ -164,7 +161,7 @@ const Editor = () => {
     isValid: boolean
   ) => {
     // if (!isValid) return;
-    const newServices = [...services];
+    const newServices = [...servicesState];
     // @ts-ignore
     newServices[index][key] = value;
 
@@ -175,15 +172,15 @@ const Editor = () => {
       handleEditorState("totalPrice", formatRUB(totalPrice), !!totalPrice);
       handleEditorState("totalIncome", formatRUB(totalPrice * COMMISSION), !!totalPrice);
     }
-    setSevices(newServices);
+    setSevicesState(newServices);
   };
   const handleServiceAdd = () => {
-    setSevices([...services, { title: "", amount: 0, priceOne: 5, priceTotal: 0 }]);
+    setSevicesState([...servicesState, { ...serviceDefault }]);
   };
   const handleServiceDelete = (index: number) => {
-    const newServices = [...services];
+    const newServices = [...servicesState];
     newServices.splice(index, 1);
-    setSevices(newServices);
+    setSevicesState(newServices);
   };
 
   const handleClose = (clearState?: boolean) => {
@@ -218,7 +215,7 @@ const Editor = () => {
         body.event_id =
           selectedEvent?.event_id || Date.now().toString(36) + Math.random().toString(36).slice(2);
         body[resourceFields.idField] = selectedResource;
-        body.services = services;
+        body.services = servicesState;
       }
 
       confirmEvent(body, action);
@@ -293,7 +290,7 @@ const Editor = () => {
         <Typography variant="body1" margin={2} marginBottom={0} width={"100%"}>
           {"Информация об услуге"}
         </Typography>
-        {services.map((item: EventService, i: number) => {
+        {servicesState.map((item: EventService, i: number) => {
           return renderService(item, i);
         })}
         <Box width="100%">
@@ -313,12 +310,12 @@ const Editor = () => {
   const renderService = (service: EventService, i: number) => {
     return (
       <>
-        <Grid item key={"title"} xs={7}>
+        <Grid item key={"id_service"} xs={7}>
           <EditorSelect
-            value={service.title}
-            name={"title"}
-            options={SERVICES || []}
-            onChange={(name, value, isValid) => handleServiceState(i, name, value, isValid)}
+            value={service.id_service}
+            name={"id_service"}
+            options={services || []}
+            onChange={(name, value, isValid) => handleServiceState(i, name, Number(value), isValid)}
             required={true}
             touched={touched}
             label={"Выберите услугу"}

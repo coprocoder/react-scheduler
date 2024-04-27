@@ -1,3 +1,4 @@
+import { SelectOption } from "./lib/components/inputs/SelectInput";
 import { ProcessedEvent } from "./lib/types";
 
 export const EVENTS: ProcessedEvent[] = [
@@ -143,6 +144,13 @@ export const RESOURCES = [
     avatar: "https://cs13.pikabu.ru/avatars/658/x658267-1013849002.png",
     color: "#0078c4",
   },
+];
+
+// TODO: use id instead value on select input
+export const SERVICES: SelectOption[] = [
+  { id: 1, text: "Маникюр", value: 111 },
+  { id: 2, text: "Укладка", value: 222 },
+  { id: 3, text: "Окрашивание", value: 333 },
 ];
 
 export const generateRandomEvents = (total = 300) => {

@@ -19,9 +19,10 @@ export type SelectOption = {
   text: string;
   value: any;
 };
+
 interface EditorSelectProps {
   options: Array<SelectOption>;
-  value: string;
+  value: string | number;
   name: string;
   onChange(name: string, value: string, isValid: boolean): void;
   variant?: "standard" | "filled" | "outlined";
@@ -146,7 +147,15 @@ const EditorSelect = ({
           )}
           {options.map((op) => (
             <MenuItem value={op.value} key={op.id || op.value}>
-              {multiple && <Checkbox checked={value.indexOf(op.value) > -1} color="primary" />}
+              {multiple && (
+                <Checkbox
+                  checked={
+                    value === op.value ||
+                    (typeof value === "string" && value.indexOf(op.value) > -1)
+                  }
+                  color="primary"
+                />
+              )}
               {op.text}
             </MenuItem>
           ))}
