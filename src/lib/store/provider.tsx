@@ -20,10 +20,11 @@ export const StoreProvider = ({ children, initial }: Props) => {
       onEventDrop: initial.onEventDrop,
       customEditor: initial.customEditor,
       events: initial.events || [],
+      resourceViewMode: initial.resourceViewMode || "default",
     }));
     // Rerender if changed on some props
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initial.onEventDrop, initial.customEditor, initial.events]);
+  }, [initial.onEventDrop, initial.customEditor, initial.events, initial.resourceViewMode]);
 
   const handleState = (value: SchedulerState[keyof SchedulerState], name: keyof SchedulerState) => {
     set((prev) => ({ ...prev, [name]: value }));

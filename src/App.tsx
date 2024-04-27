@@ -2,11 +2,14 @@ import { Scheduler } from "./lib";
 import { EVENTS, RESOURCES } from "./events";
 import { useRef } from "react";
 import { Typography } from "@mui/material";
+import { useWindowResize } from "./lib/hooks/useWindowResize";
 import { SchedulerRef } from "./lib/types";
 import "./app.scss";
 
 function App() {
   const calendarRef = useRef<SchedulerRef>(null);
+  const windowSize = useWindowResize();
+
   const hourRender = (hour: string) => {
     const minutes = +(hour.slice(-2) || "");
     if ([15, 45].includes(minutes)) return <div></div>;
@@ -24,7 +27,7 @@ function App() {
       ref={calendarRef}
       events={EVENTS}
       resources={RESOURCES}
-      // resourceViewMode={"tabs"}
+      resourceViewMode={windowSize.width < 900 ? "tabs" : "default"}
       hourFormat={"24"}
       day={{
         startHour: 7,
