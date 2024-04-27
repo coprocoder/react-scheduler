@@ -77,20 +77,29 @@ const EventItem = ({ event, multiday, hasPrev, hasNext, showdate = true }: Event
     }
 
     let item = (
-      <div style={{ padding: "2px 6px", display: "flex", flexDirection: "column" }}>
-        {showdate && (
-          <Typography variant="body2" noWrap>
-            {`${format(event.start, hFormat, {
-              locale,
-            })} - ${format(event.end, hFormat, { locale })}`}
-          </Typography>
-        )}
-        {event.services?.map((e, i) => (
-          <Typography key={`${e.id_service}_${i}`} sx={{ fontSize: 11 }} noWrap>
-            {services.find((x) => x.id === e.id_service)?.text}
-          </Typography>
-        ))}
-        <Box marginTop={"auto"}>
+      <div
+        style={{
+          padding: "2px 6px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box>
+          {showdate && (
+            <Typography variant="body2" noWrap>
+              {`${format(event.start, hFormat, {
+                locale,
+              })} - ${format(event.end, hFormat, { locale })}`}
+            </Typography>
+          )}
+          {event.services?.map((e, i) => (
+            <Typography key={`${e.id_service}_${i}`} sx={{ fontSize: 11 }} noWrap>
+              {services.find((x) => x.value === e.id_service)?.text}
+            </Typography>
+          ))}
+        </Box>
+        <Box>
           <Typography variant="subtitle2" style={{ fontSize: 12 }} noWrap>
             {event.clientName}
           </Typography>
