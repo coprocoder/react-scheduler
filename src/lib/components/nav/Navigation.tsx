@@ -106,6 +106,7 @@ const Navigation = () => {
         }}
       >
         <Button
+          color={selectedDate.toDateString() === new Date().toDateString() ? "primary" : "inherit"}
           onClick={() => handleSelectedDateChange(getTimeZonedDate(new Date(), timeZone))}
           aria-label={translations.navigation.today}
         >

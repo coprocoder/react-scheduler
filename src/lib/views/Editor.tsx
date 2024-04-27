@@ -410,13 +410,29 @@ const Editor = () => {
           </Grid>
         </DialogContent>
         <DialogActions sx={{ gap: 3, margin: 2 }}>
-          <Button fullWidth onClick={handleConfirm} sx={{ background: "#FFCB00" }}>
+          <Button
+            fullWidth
+            onClick={handleConfirm}
+            color={"inherit"}
+            sx={{ background: "#FFCB00" }}
+          >
             {"Сохранить"}
           </Button>
-          <Button fullWidth onClick={handleConfirm} sx={{ background: "#1EB44F" }}>
+          <Button
+            fullWidth
+            onClick={handleConfirm}
+            color={"inherit"}
+            sx={{ background: "#1EB44F" }}
+          >
             {translations.form.confirm}
           </Button>
-          <Button fullWidth variant={"outlined"} color="primary" onClick={() => handleClose()}>
+          <Button
+            fullWidth
+            onClick={() => handleClose()}
+            variant={"outlined"}
+            color={"inherit"}
+            sx={{ borderColor: "lightgray" }}
+          >
             {"Выход"}
           </Button>
         </DialogActions>
