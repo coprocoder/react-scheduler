@@ -2,6 +2,7 @@ import { Scheduler } from "./lib";
 import { EVENTS, RESOURCES, SERVICES } from "./events";
 import { useRef } from "react";
 import { Typography } from "@mui/material";
+import ru from "date-fns/locale/ru";
 import { useWindowResize } from "./lib/hooks/useWindowResize";
 import { SchedulerRef } from "./lib/types";
 import "./app.scss";
@@ -30,6 +31,7 @@ function App() {
       services={SERVICES}
       resourceViewMode={windowSize.width < 900 ? "tabs" : "default"}
       hourFormat={"24"}
+      locale={ru}
       day={{
         startHour: 7,
         endHour: 24,
@@ -38,8 +40,8 @@ function App() {
         hourRenderer: hourRender,
       }}
       view={"day"}
-      navigation={false}
-      disableViewNavigator={true}
+      // navigation={false}
+      // disableViewNavigator={true}
       // === DEBUG PROPS
       // events ={generateRandomEvents(200)}
       // fields={[{
