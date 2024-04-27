@@ -163,7 +163,7 @@ const Editor = () => {
     value: string | number,
     isValid: boolean
   ) => {
-    if (!isValid) return;
+    // if (!isValid) return;
     const newServices = [...services];
     // @ts-ignore
     newServices[index][key] = value;
@@ -172,12 +172,8 @@ const Editor = () => {
       newServices[index].priceTotal = newServices[index].amount * newServices[index].priceOne;
 
       const totalPrice = newServices.reduce((sum, el) => sum + el.priceTotal, 0);
-      handleEditorState("totalPrice", formatRUB(totalPrice), state.totalPrice.validity);
-      handleEditorState(
-        "totalIncome",
-        formatRUB(totalPrice * COMMISSION),
-        state.totalIncome.validity
-      );
+      handleEditorState("totalPrice", formatRUB(totalPrice), !!totalPrice);
+      handleEditorState("totalIncome", formatRUB(totalPrice * COMMISSION), !!totalPrice);
     }
     setSevices(newServices);
   };
@@ -323,6 +319,7 @@ const Editor = () => {
             name={"title"}
             options={SERVICES || []}
             onChange={(name, value, isValid) => handleServiceState(i, name, value, isValid)}
+            required={true}
             touched={touched}
             label={"Выберите услугу"}
           />
@@ -332,6 +329,7 @@ const Editor = () => {
             value={service.amount.toString()}
             name={"amount"}
             onChange={(name, value, isValid) => handleServiceState(i, name, Number(value), isValid)}
+            required={true}
             touched={touched}
             decimal={true}
           />

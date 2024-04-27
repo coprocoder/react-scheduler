@@ -79,7 +79,7 @@ const EditorInput = ({
           ? translations?.validation?.max(max)
           : translations?.validation?.max || `Maximum ${max} letters`;
     }
-    if (required && `${val}`.trim().length <= 0) {
+    if (required && (`${val}`.trim().length <= 0 || (decimal && parseFloat(val) === 0))) {
       isValid = false;
       errorMsg = translations?.validation?.required || "Required";
     }
