@@ -54,8 +54,8 @@ interface CalendarEvent {
   clientName: string;
   clientPhone: string;
   services?: EventService[];
-  totalPrice?: string;
-  totalIncome?: string;
+  totalPrice?: number;
+  totalIncome?: number;
   comment?: string;
   // date
   start: Date;
@@ -110,7 +110,7 @@ export interface Translations {
   loading: string;
 }
 
-export type InputTypes = "input" | "textarea" | "date" | "select" | "hidden" | "text";
+export type InputTypes = "input" | "textarea" | "date" | "select" | "hidden" | "currency";
 
 export interface EventRendererProps
   extends Pick<

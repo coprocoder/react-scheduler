@@ -24,7 +24,7 @@ import {
   SchedulerHelpers,
   EventService,
 } from "../types";
-import { EditorSelect, SelectOption } from "../components/inputs/SelectInput";
+import { EditorSelect } from "../components/inputs/SelectInput";
 import { arraytizeFieldVal } from "../helpers/generals";
 import { SelectedRange } from "../store/types";
 import useStore from "../hooks/useStore";
@@ -103,15 +103,15 @@ const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, 
       config: { title: "Комментарий" },
     },
     totalPrice: {
-      value: event?.totalPrice || formatRUB(0),
+      value: event?.totalPrice || 0,
       validity: !!event?.totalPrice,
-      type: "text",
+      type: "currency",
       config: { title: "Сумма к оплате", titleInline: true },
     },
     totalIncome: {
-      value: event?.totalIncome || formatRUB(0),
+      value: event?.totalIncome || 0,
       validity: !!event?.totalIncome,
-      type: "text",
+      type: "currency",
       config: { title: "Доход мастера", titleInline: true },
     },
     ...customFields,
@@ -160,7 +160,6 @@ const Editor = () => {
     value: string | number,
     isValid: boolean
   ) => {
-    // if (!isValid) return;
     const newServices = [...servicesState];
     // @ts-ignore
     newServices[index][key] = value;
@@ -169,8 +168,8 @@ const Editor = () => {
       newServices[index].priceTotal = newServices[index].amount * newServices[index].priceOne;
 
       const totalPrice = newServices.reduce((sum, el) => sum + el.priceTotal, 0);
-      handleEditorState("totalPrice", formatRUB(totalPrice), !!totalPrice);
-      handleEditorState("totalIncome", formatRUB(totalPrice * COMMISSION), !!totalPrice);
+      handleEditorState("totalPrice", totalPrice, !!totalPrice);
+      handleEditorState("totalIncome", totalPrice * COMMISSION, !!totalPrice);
     }
     setSevicesState(newServices);
   };
@@ -277,8 +276,12 @@ const Editor = () => {
             label={translations.event[key] || stateItem.config?.label}
           />
         );
-      case "text":
-        return <Typography variant="body1">{stateItem.value}</Typography>;
+      case "currency":
+        return (
+          <Typography variant="body1">
+            {stateItem.validity ? formatRUB(stateItem.value) : "-"}
+          </Typography>
+        );
       default:
         return "";
     }
@@ -315,7 +318,9 @@ const Editor = () => {
             value={service.id_service}
             name={"id_service"}
             options={services || []}
-            onChange={(name, value, isValid) => handleServiceState(i, name, Number(value), isValid)}
+            onChange={(name, value, isValid) =>
+              handleServiceState(i, name, isValid ? Number(value) : value, isValid)
+            }
             required={true}
             touched={touched}
             label={"Выберите услугу"}
@@ -325,7 +330,9 @@ const Editor = () => {
           <EditorInput
             value={service.amount.toString()}
             name={"amount"}
-            onChange={(name, value, isValid) => handleServiceState(i, name, Number(value), isValid)}
+            onChange={(name, value, isValid) =>
+              handleServiceState(i, name, isValid ? Number(value) : value, isValid)
+            }
             required={true}
             touched={touched}
             decimal={true}
