@@ -51,6 +51,7 @@ export interface CellRenderedProps {
 
 interface CalendarEvent {
   event_id: number | string;
+  confirmed?: boolean;
   clientName: string;
   clientPhone: string;
   services?: EventService[];

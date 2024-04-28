@@ -72,6 +72,11 @@ const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, 
       validity: true,
       type: "hidden",
     },
+    confirmed: {
+      value: event?.confirmed || null,
+      validity: true,
+      type: "hidden",
+    },
     clientName: {
       value: event?.clientName || "",
       validity: !!event?.clientName,
@@ -189,7 +194,7 @@ const Editor = () => {
     triggerDialog(false);
   };
 
-  const handleConfirm = async () => {
+  const handleSave = async (confirm = false) => {
     let body = {} as ProcessedEvent;
     for (const key in state) {
       body[key] = state[key].value;
@@ -199,6 +204,7 @@ const Editor = () => {
     }
     try {
       triggerLoading(true);
+      if (confirm) body.confirmed = true;
       // Auto fix date
       body.end =
         body.start >= body.end
@@ -376,11 +382,17 @@ const Editor = () => {
         {/*</DialogTitle>*/}
         <DialogContent style={{ overflowX: "hidden" }}>
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Paper sx={{ background: "#B3BDFD", marginLeft: "auto", padding: "0.2rem 3rem" }}>
-              {"Запись подтверждена"}
-            </Paper>
+            {state.confirmed.value && (
+              <Paper sx={{ background: "#B3BDFD", marginLeft: "auto", padding: "0.2rem 3rem" }}>
+                {"Запись подтверждена"}
+              </Paper>
+            )}
           </Box>
-          <Grid container spacing={2}>
+          <Grid
+            container
+            spacing={2}
+            sx={{ pointerEvents: state.confirmed.value ? "none" : "all" }}
+          >
             {Object.keys(state).map((key) => {
               const item = state[key];
               return (
@@ -410,22 +422,26 @@ const Editor = () => {
           </Grid>
         </DialogContent>
         <DialogActions sx={{ gap: 3, margin: 2 }}>
-          <Button
-            fullWidth
-            onClick={handleConfirm}
-            color={"inherit"}
-            sx={{ background: "#FFCB00" }}
-          >
-            {"Сохранить"}
-          </Button>
-          <Button
-            fullWidth
-            onClick={handleConfirm}
-            color={"inherit"}
-            sx={{ background: "#1EB44F" }}
-          >
-            {translations.form.confirm}
-          </Button>
+          {!state.confirmed.value && (
+            <Button
+              fullWidth
+              onClick={() => handleSave()}
+              color={"inherit"}
+              sx={{ background: "#FFCB00" }}
+            >
+              {"Сохранить"}
+            </Button>
+          )}
+          {!state.confirmed.value && (
+            <Button
+              fullWidth
+              onClick={() => handleSave(true)}
+              color={"inherit"}
+              sx={{ background: "#1EB44F" }}
+            >
+              {translations.form.confirm}
+            </Button>
+          )}
           <Button
             fullWidth
             onClick={() => handleClose()}
