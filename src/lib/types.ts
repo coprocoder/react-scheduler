@@ -303,8 +303,10 @@ export interface SchedulerProps {
   disableViewer?: boolean;
   /**Resources array to split event views with resources */
   resources: DefaultRecourse[];
-  /** TODO: service description */
+  /** TODO: add description */
   services: SelectOption[];
+  /** TODO: add description */
+  singleDayEditor?: boolean;
   /**Map resources fields */
   resourceFields: ResourceFields;
 

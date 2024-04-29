@@ -39,6 +39,7 @@ function App() {
         headerShow: false,
         hourRenderer: hourRender,
       }}
+      singleDayEditor={true}
       view={"day"}
       // navigation={false}
       // disableViewNavigator={true}

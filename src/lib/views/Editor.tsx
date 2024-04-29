@@ -51,7 +51,11 @@ const formatRUB = (value: number) =>
 // TODO: props -> store -> handle
 const COMMISSION = 0.9;
 
-const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, StateItem> => {
+const initialState = (
+  fields: FieldProps[],
+  event?: StateEvent,
+  singleDay?: boolean
+): Record<string, StateItem> => {
   const customFields = {} as Record<string, StateItem>;
   for (const field of fields) {
     const defVal = arraytizeFieldVal(field, field.default, event);
@@ -64,6 +68,53 @@ const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, 
       config: field.config,
     };
   }
+
+  const dateMultiDay: Record<string, StateItem> = {
+    start: {
+      value: event?.start || new Date(),
+      validity: true,
+      type: "datetime",
+      config: { label: "Start", sm: 6 },
+    },
+    end: {
+      value: event?.end || new Date(),
+      validity: true,
+      type: "datetime",
+      config: { label: "End", sm: 6 },
+    },
+  };
+  const dateSingleDay: Record<string, StateItem> = {
+    start: {
+      value: event?.start || new Date(),
+      validity: true,
+      type: "date",
+      config: { sm: 6, title: "Дата", titleInline: true },
+    },
+    timeStart: {
+      value: event?.start
+        ? new Date(
+            new Date(new Date(event.start).setHours(event.start.getHours())).setMinutes(
+              event.start.getMinutes()
+            )
+          )
+        : new Date(),
+      validity: true,
+      type: "time",
+      config: { sm: 3, title: "Время", titleInline: true },
+    },
+    timeEnd: {
+      value: event?.end
+        ? new Date(
+            new Date(new Date(event.end).setHours(event.end.getHours())).setMinutes(
+              event.end.getMinutes()
+            )
+          )
+        : new Date(),
+      validity: true,
+      type: "time",
+      config: { sm: 3, title: "-", titleInline: true },
+    },
+  };
 
   // TODO: group sections
   // TODO: change order
@@ -90,18 +141,7 @@ const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, 
       type: "phone",
       config: { label: "Телефон", required: true, min: 3 },
     },
-    start: {
-      value: event?.start || new Date(),
-      validity: true,
-      type: "datetime",
-      config: { label: "Start", sm: 6 },
-    },
-    end: {
-      value: event?.end || new Date(),
-      validity: true,
-      type: "datetime",
-      config: { label: "End", sm: 6 },
-    },
+    ...(singleDay ? dateSingleDay : dateMultiDay),
     comment: {
       value: event?.comment || "",
       validity: !!event?.comment,
@@ -140,8 +180,11 @@ const Editor = () => {
     dialogMaxWidth,
     translations,
     services,
+    singleDayEditor,
   } = useStore();
-  const [state, setState] = useState(initialState(fields, selectedEvent || selectedRange));
+  const [state, setState] = useState(
+    initialState(fields, selectedEvent || selectedRange, singleDayEditor)
+  );
   const [touched, setTouched] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -206,11 +249,33 @@ const Editor = () => {
     try {
       triggerLoading(true);
       if (confirm) body.confirmed = true;
-      // Auto fix date
-      body.end =
-        body.start >= body.end
-          ? addMinutes(body.start, differenceInMinutes(selectedRange?.end!, selectedRange?.start!))
-          : body.end;
+      if (singleDayEditor) {
+        body.start = new Date(
+          body.start.getFullYear(),
+          body.start.getMonth(),
+          body.start.getDate(),
+          body.timeStart.getHours(),
+          body.timeStart.getMinutes()
+        );
+        body.end = new Date(
+          body.start.getFullYear(),
+          body.start.getMonth(),
+          body.start.getDate(),
+          body.timeEnd.getHours(),
+          body.timeEnd.getMinutes()
+        );
+        delete body.timeStart;
+        delete body.timeEnd;
+      } else {
+        // Auto fix date
+        body.end =
+          body.start >= body.end
+            ? addMinutes(
+                body.start,
+                differenceInMinutes(selectedRange?.end!, selectedRange?.start!)
+              )
+            : body.end;
+      }
       // Specify action
       const action: EventActions = selectedEvent?.event_id ? "edit" : "create";
       // Trigger custom/remote when provided
@@ -281,7 +346,8 @@ const Editor = () => {
             onChange={(...args) => handleEditorState(...args, true)}
             touched={touched}
             {...stateItem.config}
-            label={translations.event[key] || stateItem.config?.label}
+            label={stateItem.config?.label}
+            // label={translations.event[key] || stateItem.config?.label}
           />
         );
       case "select":
@@ -422,6 +488,7 @@ const Editor = () => {
               const item = state[key];
               return (
                 <>
+                  {key === "comment" && renderServices()}
                   <Grid
                     item
                     key={key}
@@ -441,7 +508,6 @@ const Editor = () => {
                     )}
                     {renderInputs(key)}
                   </Grid>
-                  {key === "end" && renderServices()}
                 </>
               );
             })}
