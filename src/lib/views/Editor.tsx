@@ -15,6 +15,7 @@ import {
 import { addMinutes, differenceInMinutes } from "date-fns";
 import { EditorDatePicker } from "../components/inputs/DatePicker";
 import { EditorInput } from "../components/inputs/Input";
+import { EditorInputPhone } from "../components/inputs/InputPhone";
 import {
   EventActions,
   FieldInputProps,
@@ -86,7 +87,7 @@ const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, 
     clientPhone: {
       value: event?.clientPhone || "",
       validity: !!event?.clientPhone,
-      type: "input",
+      type: "phone",
       config: { label: "Телефон", required: true, min: 3 },
     },
     start: {
@@ -252,6 +253,17 @@ const Editor = () => {
             value={stateItem.value}
             name={key}
             multiline={true}
+            onChange={handleEditorState}
+            touched={touched}
+            {...stateItem.config}
+            label={translations.event[key] || stateItem.config?.label}
+          />
+        );
+      case "phone":
+        return (
+          <EditorInputPhone
+            value={stateItem.value}
+            name={key}
             onChange={handleEditorState}
             touched={touched}
             {...stateItem.config}

@@ -42,10 +42,15 @@ export interface CellRenderedProps {
   start: Date;
   end: Date;
   height: number;
+
   onClick(): void;
+
   onDragOver(e: DragEvent<HTMLButtonElement>): void;
+
   onDragEnter(e: DragEvent<HTMLButtonElement>): void;
+
   onDragLeave(e: DragEvent<HTMLButtonElement>): void;
+
   onDrop(e: DragEvent<HTMLButtonElement>): void;
 }
 
@@ -111,7 +116,7 @@ export interface Translations {
   loading: string;
 }
 
-export type InputTypes = "input" | "textarea" | "date" | "select" | "hidden" | "currency";
+export type InputTypes = "input" | "textarea" | "date" | "select" | "hidden" | "currency" | "phone";
 
 export interface EventRendererProps
   extends Pick<
@@ -205,10 +210,15 @@ export type ResourceFields = {
 
 export interface SchedulerHelpers {
   state: Record<string, StateItem>;
+
   close(): void;
+
   loading(status: boolean): void;
+
   edited?: ProcessedEvent;
+
   onConfirm(event: ProcessedEvent | ProcessedEvent[], action: EventActions): void;
+
   [resourceKey: string]: unknown;
 }
 
@@ -246,28 +256,37 @@ export interface SchedulerProps {
   events: ProcessedEvent[];
   /** Custom event render method */
   eventRenderer?: (props: EventRendererProps) => JSX.Element | null;
+
   /**Async function to load remote data with current view data. */
   getRemoteEvents?(params: RemoteQuery): Promise<ProcessedEvent[] | void>;
+
   /**Custom additional fields with it's settings */
   fields: FieldProps[];
   /**Table loading state */
   loading?: boolean;
   /** Custom loading component */
   loadingComponent?: JSX.Element;
+
   /**Async function triggered when add/edit event */
   onConfirm?(event: ProcessedEvent, action: EventActions): Promise<ProcessedEvent>;
+
   /**Async function triggered when delete event */
   onDelete?(deletedId: string | number): Promise<string | number | void>;
+
   /**Override editor modal */
   customEditor?(scheduler: SchedulerHelpers): JSX.Element;
+
   /** Custom viewer/popper component. If used, `viewerExtraComponent` & `viewerTitleComponent` will be ignored */
   customViewer?(event: ProcessedEvent, close: () => void): JSX.Element;
+
   /**Additional component in event viewer popper */
   viewerExtraComponent?:
     | JSX.Element
     | ((fields: FieldProps[], event: ProcessedEvent) => JSX.Element);
+
   /**Override viewer title component */
   viewerTitleComponent?(event: ProcessedEvent): JSX.Element;
+
   /** if true, the viewer popover will be disabled globally */
   disableViewer?: boolean;
   /**Resources array to split event views with resources */
@@ -276,8 +295,10 @@ export interface SchedulerProps {
   services: SelectOption[];
   /**Map resources fields */
   resourceFields: ResourceFields;
+
   /**Override header component of resource */
   resourceHeaderComponent?(resource: DefaultRecourse): JSX.Element;
+
   /**Resource header view mode
    * @default "default"
    */
@@ -304,6 +325,7 @@ export interface SchedulerProps {
    * Time zone IANA ID: https://data.iana.org/time-zones/releases
    */
   timeZone?: string;
+
   /**
    * Triggered when event is dropped on time slot.
    */
@@ -313,10 +335,12 @@ export interface SchedulerProps {
     updatedEvent: ProcessedEvent,
     originalEvent: ProcessedEvent
   ): Promise<ProcessedEvent | void>;
+
   /**
    *
    */
   onEventClick?(event: ProcessedEvent): void;
+
   /**
    * If event is deletable, applied to all events globally, overridden by event specific deletable prop
    * @default true
@@ -332,18 +356,22 @@ export interface SchedulerProps {
    * @default true
    */
   draggable?: boolean;
+
   /**
    * Triggered when the `selectedDate` prop changes by navigation date picker or `today` button.
    */
   onSelectedDateChange?(date: Date): void;
+
   /**
    * Triggered when navigation view changes.
    */
   onViewChange?(view: View, agenda?: boolean): void;
+
   /**
    * If true, the navigation controller bar will be sticky
    */
   stickyNavigation?: boolean;
+
   /**
    * Overrides the default behavior of more events button
    */

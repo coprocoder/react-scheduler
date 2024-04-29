@@ -83,7 +83,8 @@
     "@mui/material": ">=5.0.0",
     "@mui/x-date-pickers": ">=6.0.0-alpha",
     "date-fns": ">=2.2",
-    "react": ">=17.0.0"
+    "react": ">=17.0.0",
+    "react-phone-number-input": "^3.4.1"
   },
   "eslintConfig": {
     "extends": [
@@ -102,5 +103,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "dependencies": {}
 }
