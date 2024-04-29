@@ -116,7 +116,19 @@ export interface Translations {
   loading: string;
 }
 
-export type InputTypes = "input" | "textarea" | "date" | "select" | "hidden" | "currency" | "phone";
+export type InputTypes =
+  // basic input
+  | "input"
+  | "textarea"
+  | "select"
+  | "hidden"
+  // date time
+  | "date"
+  | "datetime"
+  | "time"
+  // specific
+  | "currency"
+  | "phone";
 
 export interface EventRendererProps
   extends Pick<
@@ -159,7 +171,7 @@ export interface FieldInputProps {
   /** Available when @input="date" ONLY
    * @default "datetime"
    */
-  type?: "date" | "datetime";
+  type?: "date" | "datetime" | "time";
   /** Available when @input="select" ONLY - Multi-Select input style.
    * if you use "default" property with this, make sure your "default" property is an instance of Array
    */

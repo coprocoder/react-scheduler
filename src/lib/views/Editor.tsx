@@ -93,13 +93,13 @@ const initialState = (fields: FieldProps[], event?: StateEvent): Record<string, 
     start: {
       value: event?.start || new Date(),
       validity: true,
-      type: "date",
+      type: "datetime",
       config: { label: "Start", sm: 6 },
     },
     end: {
       value: event?.end || new Date(),
       validity: true,
-      type: "date",
+      type: "datetime",
       config: { label: "End", sm: 6 },
     },
     comment: {
@@ -270,11 +270,14 @@ const Editor = () => {
             label={translations.event[key] || stateItem.config?.label}
           />
         );
+      case "time":
       case "date":
+      case "datetime":
         return (
           <EditorDatePicker
             value={stateItem.value}
             name={key}
+            type={stateItem.type}
             onChange={(...args) => handleEditorState(...args, true)}
             touched={touched}
             {...stateItem.config}
@@ -365,8 +368,18 @@ const Editor = () => {
             disabled={true}
           />
         </Grid>
-        <Grid item key={"price"} xs={1} alignContent={"center"}>
-          <IconButton size={"large"} style={{ padding: 10 }} onClick={() => handleServiceDelete(i)}>
+        <Grid
+          item
+          key={"price"}
+          xs={1}
+          sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+        >
+          <IconButton
+            size={"large"}
+            style={{ padding: 10 }}
+            onClick={() => handleServiceDelete(i)}
+            disabled={servicesState.length <= 1}
+          >
             <DeleteRounded />
           </IconButton>
         </Grid>
@@ -415,12 +428,13 @@ const Editor = () => {
                     sm={item.config?.sm}
                     xs={12}
                     display={item.config?.titleInline ? "flex" : "block"}
+                    alignItems={"center"}
                   >
                     {item.config?.title && (
                       <Typography
                         variant="body1"
                         marginRight={item.config?.titleInline ? 2 : 0}
-                        marginBottom={1}
+                        marginBottom={item.config?.titleInline ? 0 : 1}
                       >
                         {item.config?.title}
                       </Typography>

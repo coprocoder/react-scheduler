@@ -3,9 +3,10 @@ import DateProvider from "../hoc/DateProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import useStore from "../../hooks/useStore";
+import { TimePicker } from "@mui/x-date-pickers";
 
-interface EditorDatePickerProps {
-  type?: "date" | "datetime";
+export interface EditorDatePickerProps {
+  type?: "date" | "datetime" | "time";
   label?: string;
   variant?: "standard" | "filled" | "outlined";
   value: Date | string;
@@ -40,7 +41,13 @@ const EditorDatePicker = ({
       : undefined,
   });
 
-  const Picker = type === "date" ? DatePicker : DateTimePicker;
+  const type2Picker = {
+    date: DatePicker,
+    datetime: DateTimePicker,
+    time: TimePicker,
+  };
+
+  const Picker = type2Picker[type];
 
   const hasError = state.touched && (error || !state.valid);
 
