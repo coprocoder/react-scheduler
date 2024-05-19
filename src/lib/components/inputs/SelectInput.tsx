@@ -106,7 +106,7 @@ const EditorSelect = ({
         <Select
           label={label}
           labelId={`input_${name}`}
-          value={value}
+          value={value || ""}
           onBlur={handleTouched}
           onChange={(e) => handleChange(e.target.value)}
           IconComponent={loading ? () => <CircularProgress size={5} /> : ExpandMoreIcon}
